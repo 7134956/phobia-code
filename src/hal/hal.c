@@ -142,11 +142,10 @@ boardStart()
 		| RCC_AHB1ENR_GPIOCEN | RCC_AHB1ENR_GPIODEN | RCC_AHB1ENR_GPIOEEN;
 
 	/* Enable LED pins.
+	 * FIXME: These pins must no be used to drive LED, only 3 mA capable.
 	 * */
-	MODIFY_REG(GPIOD->MODER, GPIO_MODER_MODER12 | GPIO_MODER_MODER13
-			| GPIO_MODER_MODER14 | GPIO_MODER_MODER15,
-			GPIO_MODER_MODER12_0 | GPIO_MODER_MODER13_0
-			| GPIO_MODER_MODER14_0 | GPIO_MODER_MODER15_0);
+	MODIFY_REG(GPIOC->MODER, GPIO_MODER_MODER13 | GPIO_MODER_MODER14 | GPIO_MODER_MODER15,
+			GPIO_MODER_MODER13_0 | GPIO_MODER_MODER14_0 | GPIO_MODER_MODER15_0);
 
 	/* Configure SysTick (100 Hz).
 	 * */
@@ -185,26 +184,26 @@ void halLED(int F)
 {
 	if (F & LED_GREEN)
 
-		GPIOD->BSRRL = (1UL << 12);
+		GPIOC->BSRRL = (1UL << 14);
 	else
-		GPIOD->BSRRH = (1UL << 12);
+		GPIOC->BSRRH = (1UL << 14);
 
-	if (F & LED_ORANGE)
+	/*if (F & LED_ORANGE)
 
 		GPIOD->BSRRL = (1UL << 13);
 	else
-		GPIOD->BSRRH = (1UL << 13);
+		GPIOD->BSRRH = (1UL << 13);*/
 
 	if (F & LED_RED)
 
-		GPIOD->BSRRL = (1UL << 14);
+		GPIOC->BSRRL = (1UL << 13);
 	else
-		GPIOD->BSRRH = (1UL << 14);
+		GPIOC->BSRRH = (1UL << 13);
 
 	if (F & LED_BLUE)
 
-		GPIOD->BSRRL = (1UL << 15);
+		GPIOC->BSRRL = (1UL << 15);
 	else
-		GPIOD->BSRRH = (1UL << 15);
+		GPIOC->BSRRH = (1UL << 15);
 }
 
