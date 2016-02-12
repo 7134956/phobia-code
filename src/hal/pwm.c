@@ -21,7 +21,7 @@
 
 halPWM_t			halPWM;
 
-void irqTIM8_UP_TIM80() { }
+void irqTIM8_UP_TIM13() { }
 
 void pwmEnable()
 {

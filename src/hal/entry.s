@@ -37,7 +37,7 @@
 	.word	irqDefault
 	.word	irqDefault
 	.word	irqDefault
-	.word	irqDMA1_Stream3
+	.word	irqDefault
 	.word	irqDefault
 	.word	irqDefault
 	.word	irqDefault
@@ -48,7 +48,26 @@
 	.word	irqDefault
 	.word	irqDefault
 	.word	irqDefault
-	.word	irqTIM1_UP_TIM10
+	.word	irqDefault
+	.word	irqDefault
+	.word	irqDefault
+	.word	irqDefault
+	.word	irqDefault
+	.word	irqDefault
+	.word	irqDefault
+	.word	irqDefault
+	.word	irqDefault
+	.word	irqDefault
+	.word	irqDefault
+	.word	irqDefault
+	.word	irqUSART1
+	.word	irqDefault
+	.word	irqDefault
+	.word	irqDefault
+	.word	irqDefault
+	.word	irqDefault
+	.word	irqDefault
+	.word	irqTIM8_UP_TIM13
 	.word	irqDefault
 	.word	irqDefault
 	.word	irqDefault
@@ -62,7 +81,6 @@
 	.word	irqDefault
 	.word	irqDefault
 	.word	irqDefault
-	.word	irqUSART3
 	.word	irqDefault
 	.word	irqDefault
 	.word	irqDefault
@@ -75,25 +93,7 @@
 	.word	irqDefault
 	.word	irqDefault
 	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
-	.word	irqDefault
+	.word	irqDMA2_Stream7
 	.word	irqDefault
 	.word	irqDefault
 	.word	irqDefault
@@ -126,32 +126,32 @@ irqReset:
 	ldr	r1, =(ldEtext)
 	ldr	r3, =(ldEdata)
 
-	b.n	__iRdataComp
+	b.n	__dataComp
 
-__iRdataLoop:
+__dataLoop:
 
 	ldr.w	r0, [r1], #4
 	str.w	r0, [r2], #4
 
-__iRdataComp:
+__dataComp:
 
 	cmp	r2, r3
-	bne.n	__iRdataLoop
+	bne.n	__dataLoop
 
 	ldr	r2, =(ldSbss)
 	ldr	r1, =(ldEbss)
 	mov	r0, #0
 
-	b.n	__iRbssComp
+	b.n	__bssComp
 
-__iRbssLoop:
+__bssLoop:
 
 	str.w	r0, [r2], #4
 
-__iRbssComp:
+__bssComp:
 
 	cmp	r2, r1
-	bne.n	__iRbssLoop
+	bne.n	__bssLoop
 
 	bl	halStart
 	bl	halMain

@@ -21,37 +21,37 @@
 
 halUSART_t	 		halUSART;
 
-void irqUSART3() { }
+void irqUSART1() { }
 
-void irqDMA1_Stream3()
+void irqDMA2_Stream7()
 {
-	DMA1->LIFCR |= DMA_LIFCR_CTCIF3;
+	DMA2->LIFCR |= DMA_LIFCR_CTCIF3;
 }
 
 void usartEnable()
 {
-	/* Enable USART3 clock.
+	/* Enable USART1 clock.
 	 * */
-	RCC->APB1ENR |= RCC_APB1ENR_USART3EN;
+	RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
 
-	/* Enable DMA1 clock.
+	/* Enable DMA2 clock.
 	 * */
-	RCC->AHB1ENR |= RCC_AHB1ENR_DMA1EN;
+	RCC->AHB1ENR |= RCC_AHB1ENR_DMA2EN;
 
-	/* Enable PC10 (TX), PC11 (RX) pins.
+	/* Enable PB6 (TX), PB7 (RX) pins.
 	 * */
-	MODIFY_REG(GPIOC->AFR[1], (15UL << 8) | (15UL << 12),
-			(7UL << 8) | (7UL << 12));
-	MODIFY_REG(GPIOC->MODER, GPIO_MODER_MODER10 | GPIO_MODER_MODER11,
-			GPIO_MODER_MODER10_1 | GPIO_MODER_MODER11_1);
+	MODIFY_REG(GPIOB->AFR[0], (15UL << 28) | (15UL << 24),
+			(7UL << 28) | (7UL << 24));
+	MODIFY_REG(GPIOB->MODER, GPIO_MODER_MODER6 | GPIO_MODER_MODER7,
+			GPIO_MODER_MODER6_1 | GPIO_MODER_MODER7_1);
 
 	/* Configure USART.
 	 * */
-	USART3->BRR = HZ_APB1 / halUSART.baudRate;
-	USART3->CR1 = USART_CR1_UE | USART_CR1_M | USART_CR1_PCE
+	USART1->BRR = HZ_APB1 / halUSART.baudRate;
+	USART1->CR1 = USART_CR1_UE | USART_CR1_M | USART_CR1_PCE
 		| USART_CR1_RXNEIE | USART_CR1_TE | USART_CR1_RE;
-	USART3->CR2 = 0;
-	USART3->CR3 = USART_CR3_DMAT | USART_CR3_DMAR;
+	USART1->CR2 = 0;
+	USART1->CR3 = USART_CR3_DMAT | USART_CR3_DMAR;
 
 	/* Flush RX buffer.
 	 * */
@@ -59,62 +59,62 @@ void usartEnable()
 
 	/* Configure DMA for RX.
 	 * */
-	DMA1->LIFCR |= DMA_LIFCR_CTCIF1 | DMA_LIFCR_CHTIF1 | DMA_LIFCR_CTEIF1
-		| DMA_LIFCR_CDMEIF1 | DMA_LIFCR_CFEIF1;
-	DMA1_Stream1->PAR = (unsigned int) &USART3->DR;
-	DMA1_Stream1->M0AR = (unsigned int) halUSART.RX;
-	DMA1_Stream1->NDTR = USART_RXBUF_SZ;
-	DMA1_Stream1->FCR = 0;
-	DMA1_Stream1->CR = DMA_SxCR_CHSEL_2 | DMA_SxCR_PL_0 | DMA_SxCR_MINC
+	DMA2->HIFCR |= DMA_HIFCR_CTCIF5 | DMA_HIFCR_CHTIF5 | DMA_HIFCR_CTEIF5
+		| DMA_HIFCR_CDMEIF5 | DMA_HIFCR_CFEIF5;
+	DMA2_Stream5->PAR = (unsigned int) &USART1->DR;
+	DMA2_Stream5->M0AR = (unsigned int) halUSART.RX;
+	DMA2_Stream5->NDTR = USART_RXBUF_SZ;
+	DMA2_Stream5->FCR = 0;
+	DMA2_Stream5->CR = DMA_SxCR_CHSEL_2 | DMA_SxCR_PL_0 | DMA_SxCR_MINC
 		| DMA_SxCR_CIRC;
 
-	DMA1_Stream1->CR |= DMA_SxCR_EN;
+	DMA2_Stream5->CR |= DMA_SxCR_EN;
 
 	/* Configure DMA for TX.
 	 * */
-	DMA1->LIFCR |= DMA_LIFCR_CTCIF3 | DMA_LIFCR_CHTIF3 | DMA_LIFCR_CTEIF3
-		| DMA_LIFCR_CDMEIF3 | DMA_LIFCR_CFEIF3;
-	DMA1_Stream3->PAR = (unsigned int) &USART3->DR;
-	DMA1_Stream3->M0AR = (unsigned int) halUSART.TX;
-	DMA1_Stream3->NDTR = 0;
-	DMA1_Stream3->FCR = 0;
-	DMA1_Stream3->CR = DMA_SxCR_CHSEL_2 | DMA_SxCR_PL_0 | DMA_SxCR_MINC
+	DMA2->HIFCR |= DMA_HIFCR_CTCIF7 | DMA_HIFCR_CHTIF7 | DMA_HIFCR_CTEIF7
+		| DMA_HIFCR_CDMEIF7 | DMA_HIFCR_CFEIF7;
+	DMA2_Stream7->PAR = (unsigned int) &USART1->DR;
+	DMA2_Stream7->M0AR = (unsigned int) halUSART.TX;
+	DMA2_Stream7->NDTR = 0;
+	DMA2_Stream7->FCR = 0;
+	DMA2_Stream7->CR = DMA_SxCR_CHSEL_2 | DMA_SxCR_PL_0 | DMA_SxCR_MINC
 		| DMA_SxCR_DIR_0 | DMA_SxCR_TCIE;
 
 	/* Enable IRQs.
 	 * */
-	NVIC_SetPriority(DMA1_Stream3_IRQn, 11);
-	NVIC_SetPriority(USART3_IRQn, 11);
-	NVIC_EnableIRQ(DMA1_Stream3_IRQn);
-	NVIC_EnableIRQ(USART3_IRQn);
+	NVIC_SetPriority(DMA2_Stream7_IRQn, 11);
+	NVIC_SetPriority(USART1_IRQn, 11);
+	NVIC_EnableIRQ(DMA2_Stream7_IRQn);
+	NVIC_EnableIRQ(USART1_IRQn);
 }
 
 void uartDisable()
 {
 	/* Disable IRQs.
 	 * */
-	NVIC_DisableIRQ(DMA1_Stream3_IRQn);
-	NVIC_DisableIRQ(USART3_IRQn);
+	NVIC_DisableIRQ(DMA2_Stream7_IRQn);
+	NVIC_DisableIRQ(USART1_IRQn);
 
 	/* Disable DMA.
 	 * */
-	DMA1_Stream1->CR = 0;
+	DMA2_Stream5->CR = 0;
 
 	/* Disable USART.
 	 * */
-	USART3->CR1 = 0;
+	USART1->CR1 = 0;
 
-	/* Disable PC10, PC11 pins.
+	/* Disable PB6, PB7 pins.
 	 * */
-	MODIFY_REG(GPIOC->MODER, GPIO_MODER_MODER10 | GPIO_MODER_MODER11, 0);
+	MODIFY_REG(GPIOB->MODER, GPIO_MODER_MODER6 | GPIO_MODER_MODER7, 0);
 
 	/* Disable DMA1 clock.
 	 * */
-	RCC->AHB1ENR &= ~RCC_AHB1ENR_DMA1EN;
+	RCC->AHB1ENR &= ~RCC_AHB1ENR_DMA2EN;
 
-	/* Disable USART3 clock.
+	/* Disable USART1 clock.
 	 * */
-	RCC->AHB1ENR &= ~RCC_APB1ENR_USART3EN;
+	RCC->APB2ENR &= ~RCC_APB2ENR_USART1EN;
 }
 
 int usartRecv()
@@ -122,7 +122,7 @@ int usartRecv()
 	int	rN, rW, xC;
 
 	rN = halUSART.rN;
-	rW = USART_RXBUF_SZ - DMA1_Stream1->NDTR;
+	rW = USART_RXBUF_SZ - DMA2_Stream5->NDTR;
 
 	if (rN != rW) {
 
@@ -139,14 +139,14 @@ int usartRecv()
 
 int usartPoll()
 {
-	return (DMA1_Stream3->CR & DMA_SxCR_EN) ? 0 : 1;
+	return (DMA2_Stream7->CR & DMA_SxCR_EN) ? 0 : 1;
 }
 
 void usartPushAll(int N)
 {
-	DMA1->LIFCR |= DMA_LIFCR_CTCIF3 | DMA_LIFCR_CHTIF3 | DMA_LIFCR_CTEIF3
-		| DMA_LIFCR_CDMEIF3 | DMA_LIFCR_CFEIF3;
-	DMA1_Stream3->NDTR = N;
-	DMA1_Stream3->CR |= DMA_SxCR_EN;
+	DMA2->HIFCR |= DMA_HIFCR_CTCIF7 | DMA_HIFCR_CHTIF7 | DMA_HIFCR_CTEIF7
+		| DMA_HIFCR_CDMEIF7 | DMA_HIFCR_CFEIF7;
+	DMA2_Stream7->NDTR = N;
+	DMA2_Stream7->CR |= DMA_SxCR_EN;
 }
 
