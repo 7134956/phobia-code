@@ -32,8 +32,8 @@ void irqADC()
 		ADC2->SR &= ~ADC_SR_JEOC;
 		ADC3->SR &= ~ADC_SR_JEOC;
 
-		halADC.xA = ADC2->JDR1;
-		halADC.xB = ADC3->JDR1;
+		halADC.xA = 4096 - (int) ADC2->JDR1;
+		halADC.xB = 4096 - (int) ADC3->JDR1;
 		halADC.xU = ADC1->JDR1;
 
 		adcIRQ();
