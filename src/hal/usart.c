@@ -25,7 +25,8 @@ void irqUSART1() { }
 
 void irqDMA2_Stream7()
 {
-	DMA2->LIFCR |= DMA_LIFCR_CTCIF3;
+	DMA2->HIFCR |= DMA_HIFCR_CTCIF7 | DMA_HIFCR_CHTIF7 | DMA_HIFCR_CTEIF7
+		| DMA_HIFCR_CDMEIF7 | DMA_HIFCR_CFEIF7;
 }
 
 void usartEnable()
@@ -47,7 +48,7 @@ void usartEnable()
 
 	/* Configure USART.
 	 * */
-	USART1->BRR = HZ_APB1 / halUSART.baudRate;
+	USART1->BRR = HZ_APB2 / halUSART.baudRate;
 	USART1->CR1 = USART_CR1_UE | USART_CR1_M | USART_CR1_PCE
 		| USART_CR1_RXNEIE | USART_CR1_TE | USART_CR1_RE;
 	USART1->CR2 = 0;
