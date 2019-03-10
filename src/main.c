@@ -118,6 +118,8 @@ void taskANALOG(void *pData)
 	while (1);
 }
 
+void ap_demo_startup(const char *s);
+
 void taskINIT(void *pData)
 {
 	int			rc_flash;
@@ -146,10 +148,10 @@ void taskINIT(void *pData)
 
 		hal.USART_baud_rate = 57600;
 		hal.PWM_frequency = 30000.f;
-		hal.PWM_deadtime = 190;
+		hal.PWM_deadtime = 90;
 		hal.ADC_reference_voltage = 3.3f;
-		hal.ADC_current_shunt_resistance = 240E-6f;
-		hal.ADC_amplifier_gain = 60.f;
+		hal.ADC_current_shunt_resistance = 55E-3f;
+		hal.ADC_amplifier_gain = 1.f;
 		hal.ADC_voltage_divider_gain = 27.f / (470.f + 27.f);
 
 		hal.PPM_mode = PPM_DISABLED;
@@ -173,7 +175,7 @@ void taskINIT(void *pData)
 		ap.temp_current_PCB_derated = 50.f;
 
 		ap.batt_voltage_low = 6.0f;
-		ap.batt_voltage_high = 54.0f;
+		ap.batt_voltage_high = 50.0f;
 
 		ap.load_transform[0] = 0.f;
 		ap.load_transform[1] = 4.545E-3f;
@@ -194,7 +196,7 @@ void taskINIT(void *pData)
 		/* Default.
 		 * */
 
-		pm.fb_current_clamp = (float) (int) (1940.f * hal.ADC_const.GA);
+		pm.fb_current_clamp = 25.f;
 
 		pm_config_default(&pm);
 		tel_reg_default(&ti);
@@ -211,6 +213,8 @@ void taskINIT(void *pData)
 	GPIO_set_HIGH(GPIO_BOOST_12V);
 
 	GPIO_set_LOW(GPIO_LED);
+
+	ap_demo_startup(EOL);
 
 	xTaskCreate(taskSH, "tSH", 512, NULL, 1, NULL);
 	xTaskCreate(taskTERM, "tTERM", configMINIMAL_STACK_SIZE, NULL, 2, NULL);

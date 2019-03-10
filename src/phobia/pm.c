@@ -33,9 +33,9 @@ void pm_config_default(pmc_t *pm)
 	pm->adjust_UC[0] = 0.f;
 	pm->adjust_UC[1] = 1.f;
 
-	pm->probe_current_hold_D = 20.f;
+	pm->probe_current_hold_D = 10.f;
 	pm->probe_current_hold_Q = 0.f;
-	pm->probe_current_sine = 5.f;
+	pm->probe_current_sine = 2.f;
 	pm->probe_freq_sine_hz = pm->freq_hz / 16.f;
 	pm->probe_speed_low = 700.f;
 	pm->probe_speed_ramp = 1700.f;
@@ -44,7 +44,7 @@ void pm_config_default(pmc_t *pm)
 
 	pm->fault_voltage_tolerance = 1.f;
 	pm->fault_current_tolerance = 2.f;
-	pm->fault_current_halt_level = 50.f;
+	pm->fault_current_halt_level = 20.f;
 	pm->fault_adjust_tolerance = 5E-2f;
 	pm->fault_flux_residue_maximal = 90.f;
 
@@ -58,8 +58,8 @@ void pm_config_default(pmc_t *pm)
 	pm->vsi_C.const_TAU = 22E-6f;
 	pm->vsi_C.const_TOF = 1.523E-6f;
 
-	pm->forced_hold_D = 10.f;
-	pm->forced_accel = 3E+3f;
+	pm->forced_hold_D = 5.f;
+	pm->forced_accel = 2E+3f;
 
 	pm->flux_gain_LP = 1E-1f;
 	pm->flux_gain_DA = 5E-1f;
@@ -87,8 +87,8 @@ void pm_config_default(pmc_t *pm)
 	pm->const_J = 0.f;
 
 	pm->i_maximal = pm->fb_current_clamp;
-	pm->i_watt_consumption_maximal = 3500.f;
-	pm->i_watt_regeneration_maximal = -50.f;
+	pm->i_watt_consumption_maximal = 500.f;
+	pm->i_watt_regeneration_maximal = -1.f;
 	pm->i_gain_PD = 5E-2f;
 	pm->i_gain_ID = 5E-3f;
 	pm->i_gain_PQ = 5E-2f;

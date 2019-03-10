@@ -1,7 +1,7 @@
 #include "cmsis/stm32f4xx.h"
 #include "hal.h"
 
-#define CLOCK_CRYSTAL_HZ		12000000UL
+#define CLOCK_CRYSTAL_HZ		8000000UL
 #define CLOCK_CPU_TARGET_HZ		168000000UL
 
 extern long			ld_begin_vectors;
