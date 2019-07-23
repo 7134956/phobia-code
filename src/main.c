@@ -320,12 +320,12 @@ void task_INIT(void *pData)
 
 		hal.USART_baud_rate = 57600;
 		hal.PWM_frequency = 30000.f;
-		//hal.PWM_deadtime = 190;
-		hal.PWM_deadtime = 90; // rev3
+		hal.PWM_deadtime = 190;
+		//hal.PWM_deadtime = 90; // rev3
 		hal.ADC_reference_voltage = 3.3f;
 		//hal.ADC_shunt_resistance = 340E-6f; // rev4b_(kozin)
-		//hal.ADC_shunt_resistance = 170E-6f; // rev4b_(me)
-		hal.ADC_shunt_resistance = 620E-6f; // rev3
+		hal.ADC_shunt_resistance = 170E-6f; // rev4b_(me)
+		//hal.ADC_shunt_resistance = 620E-6f; // rev3
 		hal.ADC_amplifier_gain = 60.f;
 		hal.ADC_voltage_ratio = vm_R2 / (vm_R1 + vm_R2);
 		/*

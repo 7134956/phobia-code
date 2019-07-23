@@ -7,7 +7,7 @@ void pm_default(pmc_t *pm)
 	pm->dc_clearance = 420;
 
 	pm->config_NOP = PM_NOP_THREE_PHASE;
-	pm->config_TVM = PM_DISABLED;
+	pm->config_TVM = PM_ENABLED;
 	pm->config_SENSOR = PM_SENSOR_DISABLED;
 	pm->config_HFI = PM_DISABLED;
 	pm->config_LOOP = PM_LOOP_DRIVE_SPEED;
